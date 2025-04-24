@@ -24,7 +24,11 @@ export class KeycloakService {
     if(authenticated){
       this.userInfo = await this.keycloak.loadUserInfo();
     }
-    //, await this.keycloak.loadUserProfile())
+    //console.log(await this.keycloak.loadUserProfile());
+    this.keycloak.onTokenExpired = async() => {
+      console.log('token expired!!!');
+      await this.keycloak.updateToken(30);
+    }
   }
   public isAuthenticated(): boolean {
     return this.keycloak.authenticated || false;
@@ -35,10 +39,13 @@ export class KeycloakService {
   public logout(): void {
     this.keycloak.logout();
   }
-  public hasResourceRole(role: string, resource: string): boolean{
+  public hasResourceRole(role: string, resource: string): boolean {
     return this.keycloak.hasResourceRole(role, resource);
   }
   public getUserInfo(): object {
     return this.userInfo;
+  }
+  public getAuthorizationToken(): string {
+    return this.keycloak.token || 'error';
   }
 }

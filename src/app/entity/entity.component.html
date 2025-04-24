@@ -1,0 +1,15 @@
+<div>crear</div>
+@for (item of entities; track item.Id) {
+	<table>
+		<tbody>
+			<tr>
+				<td>{{ item.Id }}</td>
+				<td>{{ item.Name }}</td>
+				<td>{{ item.Description }}</td>
+			</tr>
+		</tbody>
+	</table>
+} @empty {
+	<li>There are no items.</li>
+}
+<div>pages 1-2</div>
