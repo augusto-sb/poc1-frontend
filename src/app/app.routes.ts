@@ -7,4 +7,8 @@ export const routes: Routes = [
     path: 'entity',
     component: EntityComponent,
   },
+  /*{
+    path: 'entity/create',
+    component: EntityCreationComponent,
+  },*/
 ];

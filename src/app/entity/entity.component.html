@@ -1,15 +1,31 @@
-<div>crear</div>
-@for (item of entities; track item.Id) {
-	<table>
-		<tbody>
-			<tr>
-				<td>{{ item.Id }}</td>
-				<td>{{ item.Name }}</td>
-				<td>{{ item.Description }}</td>
-			</tr>
-		</tbody>
-	</table>
-} @empty {
-	<li>There are no items.</li>
+@if(ks.hasResourceRole('entity-create', 'private')){
+	<a routerLink="./create">Crear</a>
 }
-<div>pages 1-2</div>
+
+<table>
+	<thead>
+		<tr>
+			<td>Id</td>
+			<td>Name</td>
+			<td>Description</td>
+			<td>Actions</td>
+		</tr>
+	</thead>
+	<tbody>
+	@for (item of entities; track item.Id) {
+		<tr>
+			<td>{{ item.Id }}</td>
+			<td>{{ item.Name }}</td>
+			<td>{{ item.Description }}</td>
+			<td>@if(ks.hasResourceRole('entity-read', 'private')){<a routerLink="./{{ item.Id }}">Ver</a>}</td>
+			<td>@if(ks.hasResourceRole('entity-update', 'private')){<a routerLink="./edit/{{ item.Id }}">Actualizar</a>}</td>
+			<td>@if(ks.hasResourceRole('entity-delete', 'private')){<a routerLink="./delete/{{ item.Id }}">Eliminar</a>}</td>
+		</tr>
+	} @empty {
+		<tr>There are no items.</tr>
+	}
+	</tbody>
+	<tfoot>
+		<tr>pages 1-2... viendo {{ entities.length }} de {{ amount }}</tr>
+	</tfoot>
+</table>

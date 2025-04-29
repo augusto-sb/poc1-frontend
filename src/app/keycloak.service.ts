@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import Keycloak from 'keycloak-js';
 
-import { environment } from '../environments/environment.ts';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,16 @@ export class KeycloakService {
   //constructor(){}
 
   public async init(): Promise<void> {
+    this.keycloak.onTokenExpired = async() => {
+      console.log('token expired!!!');
+      try{
+        const r = await this.keycloak.updateToken(30);
+        console.log(r ? 'Token was refreshed' : 'Token is still valid');
+      }catch(e){
+        console.log('error renewing token', e);
+      }
+    }
+    //events like onTokenExpired must be set before init()!!!
     const authenticated = await this.keycloak.init({
       onLoad: 'check-sso',
     });
@@ -25,10 +35,6 @@ export class KeycloakService {
       this.userInfo = await this.keycloak.loadUserInfo();
     }
     //console.log(await this.keycloak.loadUserProfile());
-    this.keycloak.onTokenExpired = async() => {
-      console.log('token expired!!!');
-      await this.keycloak.updateToken(30);
-    }
   }
   public isAuthenticated(): boolean {
     return this.keycloak.authenticated || false;
