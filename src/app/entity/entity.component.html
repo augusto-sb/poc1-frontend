@@ -19,7 +19,7 @@
 			<td>{{ item.Description }}</td>
 			<td>
 				@if(ks.hasResourceRole('entity-read')){<a routerLink="./{{ item.Id }}">Ver</a>}
-				@if(ks.hasResourceRole('entity-update')){<a routerLink="./edit/{{ item.Id }}">Actualizar</a>}
+				@if(ks.hasResourceRole('entity-update')){<a routerLink="./update/{{ item.Id }}">Actualizar</a>}
 				@if(ks.hasResourceRole('entity-delete')){<a routerLink="." (click)="delete(item.Id)">Eliminar</a>}
 			</td>
 		</tr>
