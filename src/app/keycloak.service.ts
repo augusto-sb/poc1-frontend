@@ -45,8 +45,8 @@ export class KeycloakService {
   public logout(): void {
     this.keycloak.logout();
   }
-  public hasResourceRole(role: string, resource: string): boolean {
-    return this.keycloak.hasResourceRole(role, resource);
+  public hasResourceRole(role: string/*, resource: string*/): boolean {
+    return this.keycloak.hasResourceRole(role, environment.authBackendClientId);
   }
   public getUserInfo(): object {
     return this.userInfo;

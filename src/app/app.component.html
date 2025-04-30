@@ -219,7 +219,7 @@
     <h1>Hello, {{ title }}</h1>
     <a routerLink="/">Home</a>
     @if(ks.isAuthenticated()){
-      @if(ks.hasResourceRole('entity-read', 'private')){
+      @if(ks.hasResourceRole('entity-read')){
         <a routerLink="/entity">Entity</a>
       }
       <p>Hola: {{ userInfo.email ? userInfo.email : 'usuario' }}</p>
