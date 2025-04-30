@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 
 import { Entity } from '../entity.type';
 import { KeycloakService } from '../../keycloak.service';
@@ -17,8 +17,10 @@ export class DetailComponent {
   constructor(
     public ks: KeycloakService,
     private readonly httpClient: HttpClient,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router,
   ){
-    httpClient.get<Entity>('/entities/1').subscribe(
+    httpClient.get<Entity>(`/entities/${activatedRoute.snapshot.params['id']}`).subscribe(
       body => {
         this.entity = body;
       },
@@ -31,7 +33,7 @@ export class DetailComponent {
     if(confirm('¿seguro?')){
       this.httpClient.delete<any>(`/entities/${id}`).subscribe(
         body => {
-          window.location.reload();
+          this.router.navigate(['..'], { relativeTo: this.activatedRoute });
         },
         err=>{console.log('Error', err);},
         ()=>{console.log('delete Finish');},

@@ -1,5 +1,7 @@
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot, Routes } from '@angular/router';
 
+//import { appGuard } from './app.guard';
+import { App2Guard } from './app2.guard';
 //import { AppComponent } from './app.component';
 import { EntityComponent } from './entity/entity.component';
 import { DetailComponent } from './entity/detail/detail.component';
@@ -31,7 +33,11 @@ export const routes: Routes = [
         path: 'create',
         title: 'Crear Entidad',
         component: CreateComponent,
-        //canActivate: [],//TBI
+        //canActivate: [appGuard],
+        canActivate: [App2Guard],
+        data: {
+          requiredRole: 'entity-create',
+        },
       },
       //dynamic routes after
       {

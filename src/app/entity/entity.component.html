@@ -1,6 +1,7 @@
-	<a routerLink="./create">Crear</a>
 @if(ks.hasResourceRole('entity-create')){
+	<a routerLink="./create">Crear</a>
 }
+<!-- should'n the router hide the link if canActivate is false? -->
 
 <table>
 	<thead>
@@ -28,6 +29,8 @@
 	}
 	</tbody>
 	<tfoot>
-		<tr>pages 1-2... viendo {{ entities.length }} de {{ amount }}</tr>
+		@for (p of ' '.repeat(pages).split(''); track $index) {
+			<button routerLink="." [queryParams]="{ page: $index }">{{ $index }}{{ typeof $index }}{{ $index === page }}</button>
+		}
 	</tfoot>
 </table>
