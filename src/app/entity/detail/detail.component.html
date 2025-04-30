@@ -1,1 +1,7 @@
-<p>detail works!</p>
+@if(entity){
+	<span>Id: {{ entity.Id }}</span><br>
+	<span>Name: {{ entity.Name }}</span><br>
+	<span>Description: {{ entity.Description }}</span><br>
+	@if(ks.hasResourceRole('entity-update')){<a routerLink="../update/{{ entity.Id }}">Actualizar</a>}
+	@if(ks.hasResourceRole('entity-delete')){<a routerLink=".." (click)="delete(entity.Id)">Eliminar</a>}
+}

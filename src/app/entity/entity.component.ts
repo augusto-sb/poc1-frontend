@@ -2,13 +2,8 @@ import { Component } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
+import { Entity } from './entity.type';
 import { KeycloakService } from '../keycloak.service';
-
-type Entity = {
-  Id: number;
-  Name: string;
-  Description: string;
-}
 
 @Component({
   selector: 'app-entity',
