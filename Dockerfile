@@ -16,3 +16,4 @@ RUN npm run build -- --output-path dist/ --base-href /frontend/
 
 FROM docker.io/nginxinc/nginx-unprivileged:1.28.0-alpine-slim AS server
 COPY --from=builder /app/dist/browser/ /usr/share/nginx/html/
+COPY docker/default.conf /etc/nginx/conf.d/default.conf
