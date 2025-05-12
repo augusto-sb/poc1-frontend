@@ -23,16 +23,18 @@ export class CreateComponent {
   ) {}
 
   onSubmit() {
-    this.httpClient.post<Entity>(`/entities`, this.createForm.value, {
-      headers: {
-        'content-type': 'application/json',
-      }
-    }).subscribe(
-      body => {
-        this.router.navigate(['entity', body.Id], {});
-      },
-      err=>{console.log('Error', err);},
-      ()=>{console.log('create Finish');},
-    );
+    if(confirm('¿seguro?')){
+      this.httpClient.post<Entity>(`/entities`, this.createForm.value, {
+        headers: {
+          'content-type': 'application/json',
+        }
+      }).subscribe(
+        body => {
+          this.router.navigate(['entity', body.Id], {});
+        },
+        err=>{console.log('Error', err);alert('Error');},
+        ()=>{console.log('create Finish');},
+      );
+    }
   }
 }
