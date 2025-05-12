@@ -1,8 +1,8 @@
 @if(ks.hasResourceRole('entity-create')){
-	<a routerLink="./create">Crear</a><br>
+	<a routerLink="./create" *ngIf="ks.hasResourceRole('entity-create')">Crear</a><br>
 }
 <!-- should'n the router hide the link if canActivate is false? -->
-<label>Ver:</label>
+<label>Ver: </label>
 <select (change)="navigate($event)">
 	<!--<option *ngFor="let size of [1,2,3,4]" [ngValue]="size">{{ size }}</option>-->
 	<!--<option value="1">1</option>

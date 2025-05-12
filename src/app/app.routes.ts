@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot, Routes } from '
 
 //import { appGuard } from './app.guard';
 import { App2Guard } from './app2.guard';
-//import { AppComponent } from './app.component';
+import { HomeComponent } from './home.component';
 import { EntityComponent } from './entity/entity.component';
 import { DetailComponent } from './entity/detail/detail.component';
 import { CreateComponent } from './entity/create/create.component';
@@ -12,28 +12,28 @@ const resolvedUpdateTitle: ResolveFn<string> = (a:ActivatedRouteSnapshot,b:Route
 const resolvedDetailTitle: ResolveFn<string> = (a:ActivatedRouteSnapshot,b:RouterStateSnapshot) => Promise.resolve(`Detalle Entidad ${a.params['id']}`);
 
 export const routes: Routes = [
-  /*{
-    path: '**',
+  {
+    path: '',
     title: 'Home',
-    component: AppComponent,
-  },*/
+    component: HomeComponent,
+  },
   {
     path: 'entity',
-    //title: 'Entidades',
-    //component: EntityComponent,
-    //canActivate: [],//TBI
     children: [
       {
         path: '',
         title: 'Entidades',
         component: EntityComponent,
-        //canActivate: [],//TBI
+        //canActivate: [appGuard],
+        canActivate: [App2Guard],
+        data: {
+          requiredRole: 'entity-read',
+        },
       },
       {
         path: 'create',
         title: 'Crear Entidad',
         component: CreateComponent,
-        //canActivate: [appGuard],
         canActivate: [App2Guard],
         data: {
           requiredRole: 'entity-create',
@@ -45,14 +45,20 @@ export const routes: Routes = [
         //title: 'Actualizar Entidad :id',
         title: resolvedUpdateTitle,
         component: UpdateComponent,
-        //canActivate: [],//TBI
+        canActivate: [App2Guard],
+        data: {
+          requiredRole: 'entity-update',
+        },
       },
       {
         path: ':id',
         //title: 'Detalle Entidad :id',
         title: resolvedDetailTitle,
         component: DetailComponent,
-        //canActivate: [],//TBI
+        canActivate: [App2Guard],
+        data: {
+          requiredRole: 'entity-read',
+        },
       },
     ],
   },

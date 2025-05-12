@@ -43,9 +43,11 @@ export class KeycloakService {
     this.keycloak.login();
   }
   public logout(): void {
-    this.keycloak.logout({
-      redirectUri: `${location.origin}`,
-    });
+    if(confirm('¿seguro?')){
+      this.keycloak.logout({
+        redirectUri: `${location.origin}`,
+      });
+    }
   }
   public hasResourceRole(role: string/*, resource: string*/): boolean {
     return this.keycloak.hasResourceRole(role, environment.authBackendClientId);

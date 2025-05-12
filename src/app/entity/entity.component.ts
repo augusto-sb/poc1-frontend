@@ -100,6 +100,7 @@ export class EntityComponent {
           relativeTo: this.route,
           queryParams: {
             size: newval,
+            page: 0,
           },
           queryParamsHandling: 'merge',
           // preserve the existing query params in the route
