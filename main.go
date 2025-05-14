@@ -10,6 +10,7 @@ import(
 )
 
 const dir string = "./build";
+var contextPath string;
 
 func handleError(err error){
     if err != nil {
@@ -20,6 +21,9 @@ func handleError(err error){
 func middleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Cache-Control", "max-age=86400, public") // 24hs=86400segs
+        if(strings.HasPrefix(r.URL.Path, contextPath)){
+            r.URL.Path = CutPrefix(r.URL.Path, contextPath)
+        }
         _, err := os.Stat(dir+r.URL.Path)
         if(err != nil){
             r.URL.Path = "/";
@@ -42,7 +46,7 @@ func standarizedContextPath() string {
 }
 
 func main()(){
-    var contextPath string = standarizedContextPath()
+    contextPath = standarizedContextPath()
     var err error;
     var fileServer http.Handler;
     err = filepath.Walk(dir, func(path string, info fs.FileInfo, err2 error) error {
@@ -62,7 +66,7 @@ func main()(){
     })
     handleError(err);
     fileServer = http.FileServer(http.Dir(dir))
-    http.Handle("/", middleware(fileServer)); // ACA SI manejamos el rewrite de nuestro lado
+    http.Handle("/", middleware(fileServer)); // ACA SI manejamos el rewrite de nuestro lado, devolver not found o redirijir a index?
     err = http.ListenAndServe(":8080", nil);
     handleError(err);
 }
