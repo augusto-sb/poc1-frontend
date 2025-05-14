@@ -20,9 +20,10 @@ func handleError(err error){
 
 func middleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        //      server.Handle("/lvlone/", http.StripPrefix("/lvlone/", os))
         w.Header().Set("Cache-Control", "max-age=86400, public") // 24hs=86400segs
         if(strings.HasPrefix(r.URL.Path, contextPath)){
-            r.URL.Path = CutPrefix(r.URL.Path, contextPath)
+            r.URL.Path = strings.CutPrefix(r.URL.Path, contextPath)
         }
         _, err := os.Stat(dir+r.URL.Path)
         if(err != nil){
