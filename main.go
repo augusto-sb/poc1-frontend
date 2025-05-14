@@ -21,7 +21,6 @@ func handleError(err error) {
 
 func middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		//      server.Handle("/lvlone/", http.StripPrefix("/lvlone/", os))
 		w.Header().Set("Cache-Control", "max-age=86400, public") // 24hs=86400segs
 		if strings.HasPrefix(r.URL.Path, contextPath) {
 			r.URL.Path, _ = strings.CutPrefix(r.URL.Path, contextPath)
@@ -68,6 +67,7 @@ func main() {
 	})
 	handleError(err)
 	fileServer = http.FileServer(http.Dir(dir))
+		//      server.Handle(contextPath, http.StripPrefix(contextPath, fileServer))
 	http.Handle("/", middleware(fileServer)) // ACA SI manejamos el rewrite de nuestro lado, devolver not found o redirijir a index?
 	err = http.ListenAndServe(":8080", nil)
 	handleError(err)
