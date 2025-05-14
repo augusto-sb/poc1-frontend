@@ -1,0 +1,32 @@
+# docker image build . -t poc1-fe:2.0.0 -f Dockerfile.v2
+
+FROM docker.io/node:20.19.1-alpine3.21 AS builder
+WORKDIR /app/
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
+COPY ./public/ ./public/
+COPY ./src/ ./src/
+COPY angular.json .
+COPY tsconfig.app.json .
+COPY tsconfig.json .
+COPY tsconfig.spec.json .
+RUN npm run build -- --output-path dist/ --base-href /context/path/
+#--base-href must end with /
+#non configurable container! everything in src/environments/environment.ts relative to same host!
+
+
+
+FROM docker.io/golang:1.22.12-alpine3.21 AS cmplr
+WORKDIR /folder/
+COPY main.go .
+RUN go build main.go
+
+
+
+FROM scratch
+COPY --from=builder /app/dist/browser/ ./build/
+COPY --from=cmplr /folder/main /main
+ENTRYPOINT ["/main"]
+EXPOSE 8080/tcp
+ENV CONTEXT_PATH=/frontend/

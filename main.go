@@ -1,0 +1,68 @@
+package main
+
+import(
+    "io/fs"
+    "io/ioutil"
+    "net/http"
+    "os"
+    "path/filepath"
+    "strings"
+)
+
+const dir string = "./build";
+
+func handleError(err error){
+    if err != nil {
+        panic(err);
+    }
+}
+
+func middleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Cache-Control", "max-age=86400, public") // 24hs=86400segs
+        _, err := os.Stat(dir+r.URL.Path)
+        if(err != nil){
+            r.URL.Path = "/";
+        }
+        next.ServeHTTP(w, r)
+    })
+}
+
+func standarizedContextPath() string {
+    t := os.Getenv("CONTEXT_PATH");
+    restul := ""
+    parts := strings.Split(t, "/")
+    for _, p := range parts {
+        if(p == ""){
+            continue;
+        }
+        restul += "/"+p;
+    }
+    return restul;
+}
+
+func main()(){
+    var contextPath string = standarizedContextPath()
+    var err error;
+    var fileServer http.Handler;
+    err = filepath.Walk(dir, func(path string, info fs.FileInfo, err2 error) error {
+        var err3 error;
+        var input []byte;
+        var output string;
+        handleError(err2);
+        if(!info.IsDir()){
+            input, err3 = ioutil.ReadFile(path);
+            handleError(err3);
+            output = strings.Replace(string(input), "/context/path", contextPath, -1);
+            //reemplazar environment.ts values...
+            err3 = ioutil.WriteFile(path, []byte(output), 0777)
+            handleError(err3);
+        }
+        return nil;
+    })
+    handleError(err);
+    fileServer = http.FileServer(http.Dir(dir))
+    http.Handle("/", middleware(fileServer)); // ACA SI manejamos el rewrite de nuestro lado
+    err = http.ListenAndServe(":8080", nil);
+    handleError(err);
+}
