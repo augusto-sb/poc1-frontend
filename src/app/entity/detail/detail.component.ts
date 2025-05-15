@@ -24,7 +24,7 @@ export class DetailComponent {
       body => {
         this.entity = body;
       },
-      err=>{console.log('Error', err);},
+      err=>{console.log('Error', err);alert('error');},
       ()=>{/*console.log('Finish')*/;},
     );
   }

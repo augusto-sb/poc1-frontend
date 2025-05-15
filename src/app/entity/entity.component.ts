@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 import { Entity } from './entity.type';
 import { KeycloakService } from '../keycloak.service';
 
 @Component({
   selector: 'app-entity',
-  imports: [RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './entity.component.html',
   styleUrl: './entity.component.css'
 })
@@ -84,7 +85,13 @@ export class EntityComponent {
     if(confirm('¿seguro?')){
       this.httpClient.delete<any>(`/entities/${id}`).subscribe(
         body => {
-          window.location.reload();
+          //window.location.reload();
+          this.router.navigate([], {
+            queryParams: {
+              page: 0,
+            },
+            queryParamsHandling: 'merge',
+          }).then(()=>{window.location.reload();});
         },
         err=>{console.log('Error', err);},
         ()=>{console.log('delete Finish');},
@@ -106,7 +113,7 @@ export class EntityComponent {
           // preserve the existing query params in the route
           //skipLocationChange: true,
           // do not trigger navigation
-       });
+        });
       }
     }
     if(e.type === "click"){
