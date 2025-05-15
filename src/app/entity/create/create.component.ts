@@ -32,7 +32,14 @@ export class CreateComponent {
         body => {
           this.router.navigate(['entity', body.Id], {});
         },
-        err=>{console.log('Error', err);alert('Error');},
+        err=>{
+          console.log('Error', err);
+          if(err.error){
+            alert(err.error)
+          }else{
+            alert('Error');
+          }
+        },
         ()=>{console.log('create Finish');},
       );
     }
