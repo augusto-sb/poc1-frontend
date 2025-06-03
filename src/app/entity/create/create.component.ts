@@ -3,6 +3,9 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+import { retry, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
 import { Entity } from '../entity.type';
 
 @Component({
@@ -28,7 +31,15 @@ export class CreateComponent {
         headers: {
           'content-type': 'application/json',
         }
-      }).subscribe(
+      })
+      .pipe(
+        retry(3), // Retry up to 3 times
+        catchError((error) => {
+          console.error('Error after retries:', error);
+          return throwError(() => error); // Re-throw the error
+        })
+      )
+      .subscribe(
         body => {
           this.router.navigate(['entity', body.Id], {});
         },

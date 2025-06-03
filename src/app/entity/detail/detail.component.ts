@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 
+import { retry, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
 import { Entity } from '../entity.type';
 import { KeycloakService } from '../../keycloak.service';
 
@@ -20,7 +23,15 @@ export class DetailComponent {
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router,
   ){
-    httpClient.get<Entity>(`/entities/${activatedRoute.snapshot.params['id']}`).subscribe(
+    httpClient.get<Entity>(`/entities/${activatedRoute.snapshot.params['id']}`)
+     .pipe(
+       retry(3), // Retry up to 3 times
+       catchError((error) => {
+         console.error('Error after retries:', error);
+         return throwError(() => error); // Re-throw the error
+       })
+     )
+    .subscribe(
       body => {
         this.entity = body;
       },
@@ -31,7 +42,15 @@ export class DetailComponent {
 
   public delete(id: number){
     if(confirm('¿seguro?')){
-      this.httpClient.delete<any>(`/entities/${id}`).subscribe(
+      this.httpClient.delete<any>(`/entities/${id}`)
+      .pipe(
+        retry(3), // Retry up to 3 times
+        catchError((error) => {
+          console.error('Error after retries:', error);
+          return throwError(() => error); // Re-throw the error
+        })
+      )
+      .subscribe(
         body => {
           this.router.navigate(['..'], { relativeTo: this.activatedRoute });
         },

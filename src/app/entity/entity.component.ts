@@ -3,6 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+import { retry, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
 import { Entity } from './entity.type';
 import { KeycloakService } from '../keycloak.service';
 
@@ -58,7 +61,15 @@ export class EntityComponent {
       }
       //console.log(reqParams);
 
-      this.httpClient.get<{Results: Entity[]; Count: number}>('/entities', { params: reqParams }).subscribe(
+      this.httpClient.get<{Results: Entity[]; Count: number}>('/entities', { params: reqParams })
+      .pipe(
+        retry(3), // Retry up to 3 times
+        catchError((error) => {
+          console.error('Error after retries:', error);
+          return throwError(() => error); // Re-throw the error
+        })
+      )
+      .subscribe(
         body => {
           this.entities = body.Results;
           this.amount = body.Count;
@@ -83,7 +94,15 @@ export class EntityComponent {
 
   public delete(id: number){
     if(confirm('¿seguro?')){
-      this.httpClient.delete<any>(`/entities/${id}`).subscribe(
+      this.httpClient.delete<any>(`/entities/${id}`)
+      .pipe(
+        retry(3), // Retry up to 3 times
+        catchError((error) => {
+          console.error('Error after retries:', error);
+          return throwError(() => error); // Re-throw the error
+        })
+      )
+      .subscribe(
         body => {
           //window.location.reload();
           this.router.navigate([], {

@@ -3,6 +3,9 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { retry, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
 import { Entity } from '../entity.type';
 
 @Component({
@@ -24,7 +27,15 @@ export class UpdateComponent {
   ) {}
 
   ngOnInit(){
-    this.httpClient.get<Entity>(`/entities/${this.activatedRoute.snapshot.params['id']}`).subscribe(
+    this.httpClient.get<Entity>(`/entities/${this.activatedRoute.snapshot.params['id']}`)
+    .pipe(
+      retry(3), // Retry up to 3 times
+      catchError((error) => {
+        console.error('Error after retries:', error);
+        return throwError(() => error); // Re-throw the error
+      })
+    )
+    .subscribe(
       body => {
         this.updateForm.setValue({
           Name: body.Name,
@@ -42,7 +53,15 @@ export class UpdateComponent {
         headers: {
           'content-type': 'application/json',
         }
-      }).subscribe(
+      })
+      .pipe(
+        retry(3), // Retry up to 3 times
+        catchError((error) => {
+          console.error('Error after retries:', error);
+          return throwError(() => error); // Re-throw the error
+        })
+      )
+      .subscribe(
         body => {
           this.router.navigate(['entity', this.activatedRoute.snapshot.params['id']], {});
         },
