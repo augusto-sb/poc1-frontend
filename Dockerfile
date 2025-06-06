@@ -9,6 +9,8 @@ COPY angular.json .
 COPY tsconfig.app.json .
 COPY tsconfig.json .
 COPY tsconfig.spec.json .
+ARG VERSION=1.0.0
+RUN npm version $VERSION
 RUN npm run build -- --output-path dist/ --base-href /frontend/
 #--base-href must end with /
 
