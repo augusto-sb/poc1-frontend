@@ -1,4 +1,4 @@
-FROM docker.io/node:20.19.2-alpine3.21 AS builder
+FROM docker.io/library/node:20.19.2-alpine3.21 AS builder
 WORKDIR /app/
 COPY package.json .
 COPY package-lock.json .
