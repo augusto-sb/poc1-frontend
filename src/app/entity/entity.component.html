@@ -1,63 +1,65 @@
 @if(ks.hasResourceRole('entity-create')){
-	<a routerLink="./create" *ngIf="ks.hasResourceRole('entity-create')">Crear</a><br>
-}
-<!-- should'n the router hide the link if canActivate is false? -->
-<label>Ver: </label>
-<select (change)="navigate($event)">
-	<!--<option *ngFor="let size of [1,2,3,4]" [ngValue]="size">{{ size }}</option>-->
-	<!--<option value="1">1</option>
-	<option value="2">2</option>
-	<option value="3">3</option>
-	<option value="4">4</option>-->
-	@for (s of sizes; track $index) {
-		@if(s === this.size){
-			<option value="{{ s }}" selected>{{ s }}</option>
-		}@else{
-			<option value="{{ s }}">{{ s }}</option>
-		}
-	}
-</select>
-<br>
-<table>
-	<thead>
-		<tr>
-			@for (ep of entityProps; track $index) {
-				<td (click)="navigate($event, ep)">{{ ep }}{{ this.sort && this.sort.key === ep ? ' '+(this.sort.direction ? `↑` : `↓`) : ''}}</td>
-			}
-			<!-- iterate every key of Entity -->
-			<!--
-			<td (click)="navigate($event, 'Id')">Id{{ this.sort && this.sort.key === 'Id' ? ' '+(this.sort.direction ? `↑` : '↓') : ''}}</td>
-			<td (click)="navigate($event, 'Name')">Name{{ this.sort && this.sort.key === 'Name' ? ' '+(this.sort.direction ? '↑' : '↓') : ''}}</td>
-			<td (click)="navigate($event, 'Description')">Description{{ this.sort && this.sort.key === 'Description' ? ' '+(this.sort.direction ? '↑' : '↓') : ''}}</td>
-			-->
-			<td>Actions</td>
-		</tr>
-	</thead>
-	<tbody>
-	@for (item of entities; track item.Id) {
-		<tr>
-			@for (ep of entityProps; track $index) {
-				<td>{{ item[ep] }}</td>
-			}
-			<!-- iterate every key of Entity -->
-			<!--
-			<td>{{ item.Id }}</td>
-			<td>{{ item.Name }}</td>
-			<td>{{ item.Description }}</td>
-			-->
-			<td>
-				@if(ks.hasResourceRole('entity-read')){<a routerLink="./{{ item.Id }}">Ver</a>}
-				@if(ks.hasResourceRole('entity-update')){<a routerLink="./update/{{ item.Id }}">Actualizar</a>}
-				@if(ks.hasResourceRole('entity-delete')){<a routerLink="." queryParamsHandling="merge" (click)="delete(item.Id)">Eliminar</a>}
-			</td>
-		</tr>
-	} @empty {
-		<tr>There are no items.</tr>
-	}
-	</tbody>
-	<tfoot>
-		@for (p of ' '.repeat(pages).split(''); track $index) {
-			<button routerLink="." [queryParams]="{ page: $index }" queryParamsHandling="merge">{{ $index }}</button>
-		}
-	</tfoot>
-</table>
+  @if (ks.hasResourceRole('entity-create')) {
+    <a routerLink="./create">Crear</a>
+    }<br>
+  }
+  <!-- should'n the router hide the link if canActivate is false? -->
+  <label>Ver: </label>
+  <select (change)="navigate($event)">
+    <!--<option *ngFor="let size of [1,2,3,4]" [ngValue]="size">{{ size }}</option>-->
+    <!--<option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>-->
+    @for (s of sizes; track $index) {
+      @if(s === this.size){
+        <option value="{{ s }}" selected>{{ s }}</option>
+        }@else{
+        <option value="{{ s }}">{{ s }}</option>
+      }
+    }
+  </select>
+  <br>
+    <table>
+      <thead>
+        <tr>
+          @for (ep of entityProps; track $index) {
+            <td (click)="navigate($event, ep)">{{ ep }}{{ this.sort && this.sort.key === ep ? ' '+(this.sort.direction ? `↑` : `↓`) : ''}}</td>
+          }
+          <!-- iterate every key of Entity -->
+          <!--
+          <td (click)="navigate($event, 'Id')">Id{{ this.sort && this.sort.key === 'Id' ? ' '+(this.sort.direction ? `↑` : '↓') : ''}}</td>
+          <td (click)="navigate($event, 'Name')">Name{{ this.sort && this.sort.key === 'Name' ? ' '+(this.sort.direction ? '↑' : '↓') : ''}}</td>
+          <td (click)="navigate($event, 'Description')">Description{{ this.sort && this.sort.key === 'Description' ? ' '+(this.sort.direction ? '↑' : '↓') : ''}}</td>
+          -->
+          <td>Actions</td>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of entities; track item.Id) {
+          <tr>
+            @for (ep of entityProps; track $index) {
+              <td>{{ item[ep] }}</td>
+            }
+            <!-- iterate every key of Entity -->
+            <!--
+            <td>{{ item.Id }}</td>
+            <td>{{ item.Name }}</td>
+            <td>{{ item.Description }}</td>
+            -->
+            <td>
+              @if(ks.hasResourceRole('entity-read')){<a routerLink="./{{ item.Id }}">Ver</a>}
+              @if(ks.hasResourceRole('entity-update')){<a routerLink="./update/{{ item.Id }}">Actualizar</a>}
+              @if(ks.hasResourceRole('entity-delete')){<a routerLink="." queryParamsHandling="merge" (click)="delete(item.Id)">Eliminar</a>}
+            </td>
+          </tr>
+          } @empty {
+          <tr>There are no items.</tr>
+        }
+      </tbody>
+      <tfoot>
+        @for (p of ' '.repeat(pages).split(''); track $index) {
+          <button routerLink="." [queryParams]="{ page: $index }" queryParamsHandling="merge">{{ $index }}</button>
+        }
+      </tfoot>
+    </table>

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 
 import { retry, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
@@ -11,7 +11,7 @@ import { KeycloakService } from '../keycloak.service';
 
 @Component({
   selector: 'app-entity',
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
   templateUrl: './entity.component.html',
   styleUrl: './entity.component.css'
 })
